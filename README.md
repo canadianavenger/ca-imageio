@@ -6,12 +6,18 @@ Basic read/write of some standard paletted graphics file formats for use with my
   - `src/bmp/bmp_load.c`:  code for loading 4 and 8 bit BMP images (16 and 256 colour paletted)
   - `src/bmp/bmp_save.c`: code for saving 4 and 8 bit BMP images (16 and 256 colour paletted)
   - `src/bmp/bmp_priv.h`: private header containing the BMP specific structures and defines
+- `include/tga.h`: types, macros, and function declarations for saving and loading Truevision TGA formatted images
+  - `src/bmp/tga_load.c`:  code for loading paletted TGA images (up to 256 colour, not-compressed)
+  - `src/bmp/tga_save.c`: code for saving paletted TGA images (up to 256 colour, not-compressed)
+  - `src/bmp/tga_priv.h`: private header containing the TGA specific structures and defines
 
 ### Test Code
 - `test/rawio.h`: types, macros, and function declarations for saving and loading raw ca-image images
   - `test/rawio.c`: read/write code for the raw images
 - `test/bmp2raw.c`: code for testing the BMP read code
 - `test/raw2bmp.c`: code for testing the BMP save code
+- `test/tga2raw.c`: code for testing the TGA read code
+- `test/raw2tga.c`: code for testing the TGA save code
 
 ## Adding ca-imageio to a project
 To add this submodule into a folder perform the following command:
