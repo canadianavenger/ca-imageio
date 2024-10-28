@@ -52,3 +52,24 @@ set (sources
 # generate the consolidated library
 add_library (${PROJECT_NAME} ${sources})
 
+if(PROJECT_IS_TOP_LEVEL)
+    set (common
+        "test/rawio.c"
+    )
+
+    set (executables 
+        bmp2raw
+        raw2bmp
+    )
+
+    #build all our program executables
+    foreach(executable IN LISTS executables)
+        add_executable(${executable} "test/${executable}.c" ${common})
+        target_link_libraries(${executable} ${PROJECT_NAME} "ca-image" "ca-utils")
+        # for convenience copy the executables into the projects bin directory
+        add_custom_command(TARGET ${executable} POST_BUILD
+            COMMAND cp "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${executable}" "${CMAKE_SOURCE_DIR}/bin/${executable}"
+        )
+    endforeach(executable IN LISTS executables)
+
+endif()
