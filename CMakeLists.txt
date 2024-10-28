@@ -9,9 +9,29 @@ set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${ProdDir}/lib/static")
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${ProdDir}/lib/shared")
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${ProdDir}/bin")
 
+if(PROJECT_IS_TOP_LEVEL)
+    # create a bin directory within the root of the project for convenience
+    file(MAKE_DIRECTORY "bin")
+    include(fetchContent)
+    FetchContent_Declare(
+        "ca-image"
+        GIT_REPOSITORY "https://github.com/canadianavenger/ca-image"
+        GIT_TAG "origin/main" # use origin/main to always use latest, use main to fetch once and forget
+    )
+    FetchContent_Declare(
+        "ca-utils"
+        GIT_REPOSITORY "https://github.com/canadianavenger/ca-util"
+        GIT_TAG "origin/main" # use origin/main to always use latest, use main to fetch once and forget
+    )
+    FetchContent_MakeAvailable("ca-image" "ca-utils")
+endif()
+
+
 include_directories(
     "."
     "include"
+    "${ca-utils_SOURCE_DIR}/include"
+    "${ca-image_SOURCE_DIR}/include"
 )
 
 # to keep things clean keep the sources in groups
