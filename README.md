@@ -1,5 +1,5 @@
 # ca-imageio
-Basic read/write of some standard paletted graphics file formats for use with my various projects. This repository is meant to be included as a git module and linked into other projects. However if built as a stand-alone project the test code will be generated.
+Basic read/write of some standard paletted graphics file formats for use with my various projects. This repository is meant to be included as a git module and linked into other projects. However if built as a stand-alone project the test code will be generated. Note: `ca-imageio` depends on [`ca-image`](https://github.com/canadianavenger/ca-image), though it is not expressly included as a module here, to avoid code replication wehn included in a project.
 
 ## Library contents
 - `include/bmp.h`: types, macros, and function declarations for saving and loading Windows BMP formatted images
