@@ -40,6 +40,11 @@ set (bmp
     "src/bmp/bmp_save.c"
 )
 
+set (tga
+    "src/tga/tga_load.c"
+    "src/tga/tga_save.c"
+)
+
 set (general 
 )
 
@@ -47,6 +52,7 @@ set (general
 set (sources 
     ${general}
     ${bmp}
+    ${tga}
 )
 
 # generate the consolidated library
@@ -60,6 +66,8 @@ if(PROJECT_IS_TOP_LEVEL)
     set (executables 
         bmp2raw
         raw2bmp
+        tga2raw
+        raw2tga
     )
 
     #build all our program executables
