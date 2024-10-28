@@ -8,8 +8,11 @@
 #include <stdint.h>
 #include <bmp.h>
 
-#ifndef IMG_BMP_INTERNAL
-#define IMG_BMP_INTERNAL
+#ifndef CA_IMG_BMP_INTERNAL
+#define CA_IMG_BMP_INTERNAL
+
+#define fclose_s(A) if(A) fclose(A); A=NULL
+#define free_s(A) if(A) free(A); A=NULL
 
 typedef struct {
     uint8_t b;
@@ -47,33 +50,5 @@ typedef struct {
     dib_header_t dib;
     bmi_header_t bmi;
 } bmp_header_t;
-
-
-/// @brief saves the image pointed to by src as a BMP, assumes 256 colour 1 byte per pixel image data
-/// @param fn name of the file to create and write to
-/// @param src pointer to a structure containing the image
-/// @return 0 on success, otherwise an error code
-int save_bmp8(const char *fn, quick_image_t *src);
-
-/// @brief saves the image pointed to by src as a BMP, assumes 16 colour 1 byte per pixel image data
-/// @param fn name of the file to create and write to
-/// @param src pointer to a structure containing the image
-/// @return 0 on success, otherwise an error code
-int save_bmp4(const char *fn, quick_image_t *src);
-
-/// @brief loads ONLY the image portion of a BMP file with 4bpp encoding
-/// @param img pointer to an allocated basic_image_t structure large enough for the image
-/// @param bmp pointer to a bmp header struct (filled in by calling code)
-/// @param fp  file handle to an open file for the BMP
-/// @return 0 on sucess, otehrwise an error code
-int load_bmp4(quick_image_t *img, bmp_header_t *bmp, FILE *fp);
-
-
-/// @brief loads ONLY the image portion of a BMP file with 8bpp encoding
-/// @param img pointer to an allocated basic_image_t structure large enough for the image
-/// @param bmp pointer to a bmp header struct (filled in by calling code)
-/// @param fp  file handle to an open file for the BMP
-/// @return 0 on sucess, otehrwise an error code
-int load_bmp8(quick_image_t *img, bmp_header_t *bmp, FILE *fp);
 
 #endif

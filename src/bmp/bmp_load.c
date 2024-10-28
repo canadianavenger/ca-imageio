@@ -10,15 +10,31 @@
 // maintian 32 bit alignment after the 16 bit signature.
 #define HDRBUFSZ (sizeof(bmp_signature_t) + sizeof(bmp_header_t))
 
+/// @brief loads ONLY the image portion of a BMP file with 4bpp encoding
+/// @param img pointer to an allocated basic_image_t structure large enough for the image
+/// @param bmp pointer to a bmp header struct (filled in by calling code)
+/// @param fp  file handle to an open file for the BMP
+/// @return 0 on sucess, otehrwise an error code
+static int load_bmp4(pal_image_t *img, bmp_header_t *bmp, FILE *fp);
+
+
+/// @brief loads ONLY the image portion of a BMP file with 8bpp encoding
+/// @param img pointer to an allocated basic_image_t structure large enough for the image
+/// @param bmp pointer to a bmp header struct (filled in by calling code)
+/// @param fp  file handle to an open file for the BMP
+/// @return 0 on sucess, otehrwise an error code
+static int load_bmp8(pal_image_t *img, bmp_header_t *bmp, FILE *fp);
+
+
 /// @brief loads a Windows BMP file into  memory. Must be a uncompressed palletted
 ///        4 bit per pixel or 8 bit per pixel image
 /// @param fn pointer ot the filename of the BMP to read
-/// @return pointer to a quick_image_t structure containing the image, or null on error with errno set/
-quick_image_t *load_bmp(const char *fn) {
+/// @return pointer to a pal_image_t structure containing the image, or null on error with errno set/
+pal_image_t *load_bmp(const char *fn) {
     int rval = 0;
     FILE *fp = NULL;
     bmp_header_t *bmp = NULL;
-    quick_image_t *img = NULL;
+    pal_image_t *img = NULL;
     bmp_palette_entry_t *pal = NULL;
 
     // do some basic error checking on the inputs
@@ -83,12 +99,10 @@ quick_image_t *load_bmp(const char *fn) {
     }
 
     // load palette here
-    // do palette read here if xpal is ! null
     if(NULL == (pal = calloc(bmp->bmi.num_colors, sizeof(bmp_palette_entry_t)))) {
         rval = errno;  // unable to allocate mem
         goto bmp_cleanup;
     }
-    img_pal_entry_t *xpal = img->pal;
 
     // read the palette from the file
     nr = fread(pal, sizeof(bmp_palette_entry_t), bmp->bmi.num_colors, fp);
@@ -99,9 +113,9 @@ quick_image_t *load_bmp(const char *fn) {
 
     // copy the  BMP BGRA palette to the external RGB palette
     for(int i = 0; i < bmp->bmi.num_colors; i++) {
-        xpal[i].r = pal[i].r;
-        xpal[i].g = pal[i].g;
-        xpal[i].b = pal[i].b;
+        img->pal[i].r = pal[i].r;
+        img->pal[i].g = pal[i].g;
+        img->pal[i].b = pal[i].b;
     }
 
     // load in the image data here
@@ -124,7 +138,7 @@ bmp_cleanup:
     return NULL;
 }
 
-int load_bmp4(quick_image_t *img, bmp_header_t *bmp, FILE *fp) {
+static int load_bmp4(pal_image_t *img, bmp_header_t *bmp, FILE *fp) {
     int rval = BMP_NOERROR;
     uint8_t *buf = NULL; // line buffer
 
@@ -189,7 +203,7 @@ bmp_cleanup:
     return rval;
 }
 
-int load_bmp8(quick_image_t *img, bmp_header_t *bmp, FILE *fp) {
+static int load_bmp8(pal_image_t *img, bmp_header_t *bmp, FILE *fp) {
     int rval = BMP_NOERROR;
     uint8_t *buf = NULL; // line buffer
 
