@@ -1,0 +1,3 @@
+[submodule "deps/image"]
+	path = deps/image
+	url = https://github.com/canadianavenger/ca-image.git
