@@ -5,8 +5,6 @@
  * This code is offered without warranty under the MIT License. Use it as you will 
  * personally or commercially, just give credit if you do.
  */
-#include <stdint.h>
-#include <stdio.h>
 #include <image.h>
 
 #ifndef CA_IMG_BMP
