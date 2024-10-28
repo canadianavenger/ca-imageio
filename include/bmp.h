@@ -12,7 +12,7 @@
 
 /// @brief additional possible return/errno values beyond what 
 ///        the C standard library provides
-// TODO: remove some of these a d favour defined ERRNO values
+// TODO: remove some of these and favour defined ERRNO values
 enum bmp_errors {
     BMP_NOERROR      = 0,
     BMP_NULL_POINTER = -1,   // passed pointer is null
