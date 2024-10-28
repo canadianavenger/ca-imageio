@@ -95,8 +95,8 @@ pal_image_t *load_raw(const char *fn) {
         goto CLEANUP;
     }
 
-    // currently only 16 and 256 colours supported
-    if((raw.colours != 256) && (raw.colours != 16)) {
+    // only up to 256 colours supported
+    if((1 > raw.colours) || (raw.colours > 256)) {
         rval = EFTYPE;
         goto CLEANUP;
     }
