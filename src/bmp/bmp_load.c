@@ -4,29 +4,23 @@
 #include <stdbool.h>
 #include <errno.h>
 
-// allocate a header buffer large enough for all 3 parts, plus 16 bit padding at the start to 
-// maintian 32 bit alignment after the 16 bit signature.
-#define HDRBUFSZ (sizeof(bmp_signature_t) + sizeof(bmp_header_t))
-
 /// @brief loads ONLY the image portion of a BMP file with 4bpp encoding
 /// @param img pointer to an allocated basic_image_t structure large enough for the image
 /// @param bmp pointer to a bmp header struct (filled in by calling code)
 /// @param fp  file handle to an open file for the BMP
-/// @return 0 on sucess, otehrwise an error code
+/// @return 0 on sucess, otherwise an error code
 static int load_bmp4(pal_image_t *img, bmp_header_t *bmp, FILE *fp);
-
 
 /// @brief loads ONLY the image portion of a BMP file with 8bpp encoding
 /// @param img pointer to an allocated basic_image_t structure large enough for the image
 /// @param bmp pointer to a bmp header struct (filled in by calling code)
 /// @param fp  file handle to an open file for the BMP
-/// @return 0 on sucess, otehrwise an error code
+/// @return 0 on sucess, otherwise an error code
 static int load_bmp8(pal_image_t *img, bmp_header_t *bmp, FILE *fp);
-
 
 /// @brief loads a Windows BMP file into  memory. Must be a uncompressed palletted
 ///        4 bit per pixel or 8 bit per pixel image
-/// @param fn pointer ot the filename of the BMP to read
+/// @param fn pointer to the filename of the BMP to read
 /// @return pointer to a pal_image_t structure containing the image, or null on error with errno set/
 pal_image_t *load_bmp(const char *fn) {
     int rval = 0;

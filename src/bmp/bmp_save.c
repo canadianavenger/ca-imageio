@@ -5,11 +5,7 @@
 #include <stdbool.h>
 #include <errno.h>
 
-// allocate a header buffer large enough for all 3 parts, plus 16 bit padding at the start to 
-// maintian 32 bit alignment after the 16 bit signature.
 #define HDRBUFSZ (sizeof(bmp_signature_t) + sizeof(bmp_header_t))
-
-
 
 /// @brief saves the image pointed to by src as a BMP, assumes 256 colour 1 byte per pixel image data
 /// @param fn name of the file to create and write to
@@ -22,7 +18,6 @@ static int save_bmp8(const char *fn, pal_image_t *src);
 /// @param src pointer to a structure containing the image
 /// @return 0 on success, otherwise an error code
 static int save_bmp4(const char *fn, pal_image_t *src);
-
 
 /// @brief saves an image as a 4 bit or 8 bit Windows BMP image
 /// @param fn pointer to the name of the file to save the image as
