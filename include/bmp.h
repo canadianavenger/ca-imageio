@@ -1,6 +1,6 @@
 /*
  * bmp.h 
- * interface definitions for a writing an indexed 256 colour Windows BMP file
+ * interface definitions for a writing an indexed colour Windows BMP file
  * 
  * This code is offered without warranty under the MIT License. Use it as you will 
  * personally or commercially, just give credit if you do.

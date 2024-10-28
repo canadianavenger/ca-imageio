@@ -37,12 +37,7 @@ static int save_bmp8(const char *fn, pal_image_t *img) {
     int rval = 0;
     FILE *fp = NULL;
     uint8_t *buf = NULL; // line buffer, also holds header info
-
-    // do some basic error checking on the inputs
-    if((NULL == fn) || (NULL == img)) {
-        rval = BMP_NULL_POINTER;
-        goto bmp_cleanup;
-    }
+    bmp_palette_entry_t *pal = NULL;
 
     // try to open/create output file
     if(NULL == (fp = fopen(fn,"wb"))) {
@@ -96,7 +91,7 @@ static int save_bmp8(const char *fn, pal_image_t *img) {
         goto bmp_cleanup;
     }
 
-    bmp_palette_entry_t *pal = calloc(256, sizeof(bmp_palette_entry_t));
+    pal = calloc(256, sizeof(bmp_palette_entry_t));
     if(NULL == pal) {
         rval = errno;  // unable to allocate mem
         goto bmp_cleanup;
@@ -116,7 +111,7 @@ static int save_bmp8(const char *fn, pal_image_t *img) {
         goto bmp_cleanup;
     }
     // we can free the BMP palette now as we don't need it anymore
-    free(pal);
+    free_s(pal);
 
     // now we need to output the image scanlines. For maximum
     // compatibility we do so in the natural order for BMP
@@ -140,6 +135,7 @@ static int save_bmp8(const char *fn, pal_image_t *img) {
     }
 
 bmp_cleanup:
+    free_s(pal);
     fclose_s(fp);
     free_s(buf);
     return rval;
@@ -149,13 +145,8 @@ static int save_bmp4(const char *fn, pal_image_t *img) {
     int rval = 0;
     FILE *fp = NULL;
     uint8_t *buf = NULL; // line buffer, also holds header info
-
-    // do some basic error checking on the inputs
-    if((NULL == fn) || (NULL == img)) {
-        rval = BMP_NULL_POINTER;
-        goto bmp_cleanup;
-    }
-
+    bmp_palette_entry_t *pal = NULL;
+    
     // try to open/create output file
     if(NULL == (fp = fopen(fn,"wb"))) {
         rval = errno;  // can't open/create output file
@@ -208,7 +199,7 @@ static int save_bmp4(const char *fn, pal_image_t *img) {
         goto bmp_cleanup;
     }
 
-    bmp_palette_entry_t *pal = calloc(16, sizeof(bmp_palette_entry_t));
+    pal = calloc(16, sizeof(bmp_palette_entry_t));
     if(NULL == pal) {
         rval = errno;  // unable to allocate mem
         goto bmp_cleanup;
@@ -228,7 +219,7 @@ static int save_bmp4(const char *fn, pal_image_t *img) {
         goto bmp_cleanup;
     }
     // we can free the palette now as we don't need it anymore
-    free(pal);
+    free_s(pal);
 
     // now we need to output the image scanlines. For maximum
     // compatibility we do so in the natural order for BMP
@@ -260,6 +251,7 @@ static int save_bmp4(const char *fn, pal_image_t *img) {
     }
 
 bmp_cleanup:
+    free_s(pal);
     fclose_s(fp);
     free_s(buf);
     return rval;
