@@ -1,5 +1,5 @@
 /*
- * bmp.h 
+ * png.h 
  * interface definitions for a writing an indexed colour Truevision TGA file
  * 
  * This code is offered without warranty under the MIT License. Use it as you will 
