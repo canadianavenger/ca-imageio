@@ -2,7 +2,7 @@
 Basic read/write of some standard paletted graphics file formats for use with my various projects. This repository is meant to be included as a git module and linked into other projects. However if built as a stand-alone project the test code will be generated.
 
 ## Library contents
-- `include/bmp.h` - types, macros, and function declarations for saving and loading Windows BMP formatted images
+- `include/bmp.h`: types, macros, and function declarations for saving and loading Windows BMP formatted images
   - `src/bmp/bmp_load.c`:  code for loading 4 and 8 bit BMP images (16 and 256 colour paletted)
   - `src/bmp/bmp_save.c`: code for saving 4 and 8 bit BMP images (16 and 256 colour paletted)
   - `src/bmp/bmp_priv.h`: private header containing the BMP specific structures and defines
