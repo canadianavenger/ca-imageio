@@ -1,5 +1,5 @@
 /*
- * bmp.h 
+ * image_bmp.h 
  * interface definitions for a writing an indexed colour Windows BMP file
  * 
  * This code is offered without warranty under the MIT License. Use it as you will 
