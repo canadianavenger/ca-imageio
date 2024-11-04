@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <image.h>
-#include <tga.h>
+#include <image_tga.h>
 #include <utils.h>
 #include "rawio.h"
 

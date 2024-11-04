@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "tga_priv.h"
-#include <tga.h>
+#include <image_tga.h>
 #include <stdbool.h>
 #include <errno.h>
 

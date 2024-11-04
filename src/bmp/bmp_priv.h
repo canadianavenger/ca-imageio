@@ -6,7 +6,7 @@
  * personally or commercially, just give credit if you do.
  */
 #include <stdint.h>
-#include <bmp.h>
+#include <image_bmp.h>
 
 #ifndef CA_IMG_BMP_INTERNAL
 #define CA_IMG_BMP_INTERNAL

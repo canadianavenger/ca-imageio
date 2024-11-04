@@ -6,7 +6,7 @@
  * personally or commercially, just give credit if you do.
  */
 #include <stdint.h>
-#include <tga.h>
+#include <image_tga.h>
 
 #ifndef CA_IMG_TGA_INTERNAL
 #define CA_IMG_TGA_INTERNAL

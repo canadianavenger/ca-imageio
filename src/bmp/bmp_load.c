@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <bmp.h>
+#include <image_bmp.h>
 #include "bmp_priv.h"
 #include <stdbool.h>
 #include <errno.h>

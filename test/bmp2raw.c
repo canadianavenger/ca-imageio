@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <image.h>
-#include <bmp.h>
+#include <image_bmp.h>
 #include <utils.h>
 #include "rawio.h"
 
