@@ -32,7 +32,7 @@ int save_tga(const char *fn, pal_image_t *img) {
 
     tga.cmap.colour_map_start  = 0;
     tga.cmap.colour_map_length = img->colours;
-    tga.cmap.colour_map_depth  = 24; //32; // 32 if we have transparency
+    tga.cmap.colour_map_depth  = (0 > img->transparent)?24:32; // 24 or 32 if we have transparency
 
     tga.image.width = img->width;
     tga.image.height = img->height;
@@ -45,8 +45,7 @@ int save_tga(const char *fn, pal_image_t *img) {
         goto CLEANUP;
     }
 
-    // todo switch between RGB and ARGB
-    int pal_entry_size = sizeof(tga_rgb_palette_entry_t);
+    int pal_entry_size = tga.cmap.colour_map_depth / 8; // should result in 3 or 4
 
     pal = calloc(img->colours, pal_entry_size);
     if(NULL == pal) {
@@ -54,13 +53,22 @@ int save_tga(const char *fn, pal_image_t *img) {
         goto CLEANUP;
     }
 
-    // copy the external RGB palette to the TGA BGR palette
-    tga_rgb_palette_entry_t *ipal = &pal->rgb;
-    for(int i = 0; i < img->colours; i++) {
-        ipal[i].r = img->pal[i].r;
-        ipal[i].g = img->pal[i].g;
-        ipal[i].b = img->pal[i].b;
-        //ipal[i].a = 255;
+    // copy the external RGB palette to the TGA BGR(A) palette
+    if(0 > img->transparent) { // no transparency, use RGB
+        tga_rgb_palette_entry_t *ipal = &pal->rgb;
+        for(int i = 0; i < img->colours; i++) {
+            ipal[i].r = img->pal[i].r;
+            ipal[i].g = img->pal[i].g;
+            ipal[i].b = img->pal[i].b;
+        }
+    } else { // has transparency, use ARGB
+        tga_argb_palette_entry_t *ipal = &pal->argb;
+        for(int i = 0; i < img->colours; i++) {
+            ipal[i].r = img->pal[i].r;
+            ipal[i].g = img->pal[i].g;
+            ipal[i].b = img->pal[i].b;
+            ipal[i].a = (i == img->transparent)?0:255;
+        }
     }
 
     // write the palette

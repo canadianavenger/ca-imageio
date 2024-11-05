@@ -34,7 +34,6 @@ pal_image_t *load_tga(const char *fn) {
     }
 
     if(0 != strncmp(tgaf.sig, TGA_SIG, 18)) {
-    printf("TGA Signature not found\n");
         rval = EINVAL;
         goto CLEANUP;
     }
@@ -50,25 +49,17 @@ pal_image_t *load_tga(const char *fn) {
         goto CLEANUP;
     }
 
-    printf("Valid TGA So far\n");
-    printf("cmap type: %d\n", tga.colour_map_type);
-    printf("image type: %d\n", tga.image_type);
-    printf("Image: %dx%d (%d colours)\n", tga.image.width, tga.image.height, tga.cmap.colour_map_length);
-
     if((1 != tga.colour_map_type) || (1 != tga.image_type)) {
-    printf("Invalid Colourmap or image type\n");
         rval = ENOTSUP;
         goto CLEANUP;
     }
 
     if(256 < (tga.cmap.colour_map_start + tga.cmap.colour_map_length)) {
-    printf("Invalid Colourmap range\n");
         rval = ENOTSUP;
         goto CLEANUP;
     }
 
     if(24 != tga.cmap.colour_map_depth) {
-    printf("Invalid Colourmap depth\n");
         rval = ENOTSUP;
         goto CLEANUP;
     }
@@ -80,8 +71,6 @@ pal_image_t *load_tga(const char *fn) {
 
     // seek past any additional id data that may be after the header
     fseek(fp, sizeof(tga_header_t) + tga.id_length, SEEK_SET);
-
-printf("PAL Start: %06zx\n", ftell(fp));
 
     // read in the palette
     int pal_entry_size = sizeof(tga_rgb_palette_entry_t);
@@ -103,8 +92,6 @@ printf("PAL Start: %06zx\n", ftell(fp));
         img->pal[tga.cmap.colour_map_start + i].g = ipal[i].g;
         img->pal[tga.cmap.colour_map_start + i].b = ipal[i].b;
     }
-
-printf("IMG Start: %06zx\n", ftell(fp));
 
     // read the image
     nr = fread(img->data, img->width, img->height, fp);
