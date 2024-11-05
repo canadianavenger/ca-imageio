@@ -9,11 +9,12 @@
 
 // strucuture definition for the file on disk
 typedef struct {
-    uint16_t width;      // width of image in pixels
-    uint16_t height;     // height of image in pixels
-    uint16_t colours;    // number of colours in the palette (size is 3x)
-    uint16_t img_offset; // absolute file offset of image data
-    uint8_t  data[];     // raw uncompressed palette data followed by image data
+    uint16_t width;       // width of image in pixels
+    uint16_t height;      // height of image in pixels
+    uint16_t colours;     // number of colours in the palette (size is 3x)
+    int16_t  transparent; // transparent colour index
+    uint16_t img_offset;  // absolute file offset of image data
+    uint8_t  data[];      // raw uncompressed palette data followed by image data
 } raw_image_file_t;
 
 /// @brief saves the image pointed to by src as a BMP
@@ -32,6 +33,7 @@ int save_raw(const char *fn, pal_image_t *img) {
     raw.width = img->width;
     raw.height = img->height;
     raw.colours = img->colours;
+    raw.transparent = img->transparent;
     raw.img_offset = (img->colours * 3) + sizeof(raw_image_file_t);
     
     // try to open/create output file
@@ -86,7 +88,7 @@ pal_image_t *load_raw(const char *fn) {
         goto CLEANUP;
     }
 
-    raw_image_file_t raw = {0,0,0,0};
+    raw_image_file_t raw = {0,0,0,0,0};
 
     // read the header
     int nr = fread(&raw, sizeof(raw_image_file_t), 1, fp);
@@ -113,6 +115,8 @@ pal_image_t *load_raw(const char *fn) {
         rval = errno;
         goto CLEANUP;
     }
+
+    img->transparent = raw.transparent;
 
     // read the palette
     nr = fread(img->pal, sizeof(img_pal_entry_t), img->colours, fp);
