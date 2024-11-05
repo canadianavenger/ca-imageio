@@ -15,7 +15,7 @@ Basic read/write of some standard paletted graphics file formats for use with my
   - `src/tga/tga_save.c`: code for saving paletted TGA images (up to 256 colour, not-compressed)
   - `src/tga/tga_priv.h`: private header containing the TGA specific structures and defines
 
-Note: PNG support is by way of [libpng](http://www.libpng.org), which also depends on [zlib](http://www.zlib.net/). Both of these libraries must be installed to build with PNG support, otherwise the library will not include PNG support. (if linking to a binary version of this library, libpng and zlib are not required)
+**Note**: PNG support is by way of [libpng](http://www.libpng.org), which also depends on [zlib](http://www.zlib.net/). Both of these libraries must be installed to build with PNG support, otherwise the library will not include PNG support. (if linking to a binary version of this library built with PNG support, libpng and zlib are not required)
 
 ### Test Code
 - `test/rawio.h`: types, macros, and function declarations for saving and loading raw ca-image images
