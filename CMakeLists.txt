@@ -34,6 +34,16 @@ include_directories(
     "${ca-image_SOURCE_DIR}/include"
 )
 
+find_package(PNG)
+
+# we didn't declare PNG as required, so we need to check if it was found
+if(PNG_FOUND)
+    find_package(ZLIB REQUIRED)
+    include_directories(${PNG_INCLUDE_DIRS})
+    include_directories(${ZLIB_INCLUDE_DIRS})
+endif()
+
+
 # to keep things clean keep the sources in groups
 set (bmp
     "src/bmp/bmp_load.c"
@@ -45,6 +55,14 @@ set (tga
     "src/tga/tga_save.c"
 )
 
+# only build the png sources, if lib_png is found.
+if(PNG_FOUND)
+    set (png
+        "src/png/png_load.c"
+        "src/png/png_save.c"
+    )
+endif()
+
 set (general 
 )
 
@@ -53,10 +71,18 @@ set (sources
     ${general}
     ${bmp}
     ${tga}
+    ${png}
 )
 
 # generate the consolidated library
 add_library (${PROJECT_NAME} ${sources})
+if(PNG_FOUND)
+    set (pnglibs
+        ${PNG_LIBRARIES}
+        ${ZLIB_LIBRARIES}
+    )
+    target_link_libraries(${PROJECT_NAME} ${pnglibs})
+endif()
 
 if(PROJECT_IS_TOP_LEVEL)
     set (common
@@ -69,6 +95,15 @@ if(PROJECT_IS_TOP_LEVEL)
         tga2raw
         raw2tga
     )
+
+    if(PNG_FOUND)
+        list(APPEND executables 
+            png2raw
+            raw2png
+        )
+    endif()
+
+
 
     #build all our program executables
     foreach(executable IN LISTS executables)
