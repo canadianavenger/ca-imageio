@@ -90,7 +90,6 @@ pal_image_t *load_tga(const char *fn) {
     }
 
     if(3 == pal_entry_size) { // RGB data
-printf("RGB palette\n");
         tga_rgb_palette_entry_t *ipal = &pal->rgb;
         for(int i = 0; i < tga.cmap.colour_map_length; i++) {
             img->pal[tga.cmap.colour_map_start + i].r = ipal[i].r;
@@ -98,7 +97,6 @@ printf("RGB palette\n");
             img->pal[tga.cmap.colour_map_start + i].b = ipal[i].b;
         }
     } else { // ARGB data
-printf("ARGB palette\n");
         tga_argb_palette_entry_t *ipal = &pal->argb;
         int first_trans = tga.cmap.colour_map_length;
         for(int i = 0; i < tga.cmap.colour_map_length; i++) {
