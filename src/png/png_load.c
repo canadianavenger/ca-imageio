@@ -100,7 +100,6 @@ pal_image_t *read_png(FILE *fp) {
     int tcols = 0;
     png_uint_32 res = png_get_tRNS(png, info, &trans, &tcols, &pngcol);
     if(PNG_INFO_tRNS == res) {
-        printf("Has tRNS\n");
         // scan and find FIRST transparent colour
         // must be fully transparent
         // blending/partial transparency, and multiple transparency
@@ -111,8 +110,6 @@ pal_image_t *read_png(FILE *fp) {
                 break;
             }
         }
-    } else {
-        printf("No tRNS (%d)\n", res);
     }
 
     if(NULL == (row_pointers = (png_bytep *)png_calloc(png, height * sizeof(png_bytep)))) {
