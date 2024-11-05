@@ -15,9 +15,12 @@ Basic read/write of some standard paletted graphics file formats for use with my
   - `src/tga/tga_save.c`: code for saving paletted TGA images (up to 256 colour, not-compressed)
   - `src/tga/tga_priv.h`: private header containing the TGA specific structures and defines
 
-**Note**: *PNG* support is by way of [libpng](http://www.libpng.org), which also depends on [zlib](http://www.zlib.net/). Both of these libraries must be installed to build with *PNG* support, otherwise the library will not include *PNG* support. (if linking to a binary version of this library already built with *PNG* support, `libpng` and `zlib` are not required)
+### Notes: 
+- *BMP* does not support transparency with paletted images (or at least not in a well supported way), as such when saving as a BMP any transparency information will be lost, and when loading no attempt is made to determine transparency.
+- *PNG* support is by way of [libpng](http://www.libpng.org), which also depends on [zlib](http://www.zlib.net/). Both of these libraries must be installed to build with *PNG* support, otherwise the library will not include *PNG* support. (if linking to a binary version of this library already built with *PNG* support, `libpng` and `zlib` are not required)
+- *TGA* support on MacOS with the builtin preview app and thumbnails is somewhat broken and uses the wrong colour component ordering when an alpha channel is present (32bit). Instead of `ARGB` MacOS is using `ABGR`, thus swapping red and blue channels when 32bit colour entries are used. Other applications such as Gimp use the correct ordering. (at least it is on my M1 Mac running Sonoma)
 
-### Test Code
+## Test Code
 - `test/rawio.h`: types, macros, and function declarations for saving and loading raw ca-image images
   - `test/rawio.c`: read/write code for the raw images
 - `test/bmp2raw.c`: code for testing the BMP read code
