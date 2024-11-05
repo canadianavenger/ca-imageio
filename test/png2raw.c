@@ -21,7 +21,9 @@ int main(int argc, char *argv[]) {
         goto CLEANUP;
     }
 
-    printf("Image is: %dx%d (%d colours)\n", img->width, img->height, img->colours);
+    printf("Image is: %dx%d (%d colours", img->width, img->height, img->colours);
+    if(0 <= img->transparent) printf(" - transparent idx: %d", img->transparent);
+    printf("))\n");
 
     rval = save_raw("OUT.BIN", img);
     if(0 != rval) {

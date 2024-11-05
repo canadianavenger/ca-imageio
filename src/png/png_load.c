@@ -95,6 +95,25 @@ pal_image_t *read_png(FILE *fp) {
     img->colours = colours; // update the colours value to reflect valid entries
 
     // process tRNS here when transparency support is added to image
+    png_bytep trans = NULL;
+    png_color_16p pngcol = NULL;
+    int tcols = 0;
+    png_uint_32 res = png_get_tRNS(png, info, &trans, &tcols, &pngcol);
+    if(PNG_INFO_tRNS == res) {
+        printf("Has tRNS\n");
+        // scan and find FIRST transparent colour
+        // must be fully transparent
+        // blending/partial transparency, and multiple transparency
+        // are not supported
+        for(int i = 0; i < tcols; i++) {
+            if(0 == trans[i]) {
+                img->transparent = i;
+                break;
+            }
+        }
+    } else {
+        printf("No tRNS (%d)\n", res);
+    }
 
     if(NULL == (row_pointers = (png_bytep *)png_calloc(png, height * sizeof(png_bytep)))) {
         rval = ENOMEM;

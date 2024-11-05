@@ -32,9 +32,11 @@ CLEANUP:
 #define PNG_BPP (1)
 int write_png(FILE *fp, pal_image_t *img) {
     int rval = 0;
-    png_structp png;
-    png_infop info;
-    png_colorp palette;
+    png_structp png = NULL;
+    png_infop   info = NULL;
+    png_colorp  palette = NULL;
+    png_bytep   trans = NULL;
+    png_bytep   *row_pointers = NULL;
 
     // make sure we have an open file
     if(NULL == fp) {
@@ -68,7 +70,10 @@ int write_png(FILE *fp, pal_image_t *img) {
         PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
     /* Set the palette if there is one.  REQUIRED for indexed-color images. */
-    palette = (png_colorp)png_malloc(png, img->colours * (sizeof (png_color)));
+    if(NULL == (palette = (png_colorp)png_malloc(png, img->colours * (sizeof (png_color))))) {
+        rval = ENOMEM;
+        goto CLEANUP;
+    }
     
     for(int i=0; i<img->colours; i++) {
         palette[i].red = img->pal[i].r;
@@ -78,8 +83,17 @@ int write_png(FILE *fp, pal_image_t *img) {
 
     png_set_PLTE(png, info, palette, img->colours);
 
-    // png_byte trans[1] = {0};
-    // png_set_tRNS(png_ptr, info_ptr, trans, 1, NULL);
+    if((0 <= img->transparent) && (img->transparent < img->colours)) {
+        if(NULL == (trans = (png_bytep)png_malloc(png, img->colours * (sizeof (png_byte))))) {
+            rval = ENOMEM;
+            goto CLEANUP;
+        }
+        for(int i = 0; i < img->colours; i++) {
+            trans[i] = (i == img->transparent)?0:255;
+        }
+        // only need to store up to (and including) the transparent colour
+        png_set_tRNS(png, info, trans, img->transparent + 1, NULL);
+    }
 
     png_write_info(png, info);
 
@@ -93,7 +107,6 @@ int write_png(FILE *fp, pal_image_t *img) {
         goto CLEANUP;
     }
 
-    png_bytep *row_pointers;
     if(NULL == (row_pointers = (png_bytep *)png_calloc(png, img->height * sizeof(png_bytep)))) {
         rval = ENOMEM;
         goto CLEANUP;
@@ -110,6 +123,7 @@ int write_png(FILE *fp, pal_image_t *img) {
 CLEANUP:
     if(NULL != png) {
         if(NULL != row_pointers) png_free(png, row_pointers);
+        if(NULL != trans) png_free(png, trans);
         if(NULL != palette) png_free(png, palette);
         png_destroy_write_struct(&png, &info);
     }
