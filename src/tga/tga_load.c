@@ -49,17 +49,20 @@ pal_image_t *load_tga(const char *fn) {
         goto CLEANUP;
     }
 
+    // must be a paletteted image
     if((1 != tga.colour_map_type) || (1 != tga.image_type)) {
         rval = ENOTSUP;
         goto CLEANUP;
     }
 
+    // we only accept 8 bit palettes
     if(256 < (tga.cmap.colour_map_start + tga.cmap.colour_map_length)) {
         rval = ENOTSUP;
         goto CLEANUP;
     }
 
-    if(24 != tga.cmap.colour_map_depth) {
+    // we only accept 24 and 32 bit colour maps (RGB and ARGB)
+    if((24 != tga.cmap.colour_map_depth) && (32 != tga.cmap.colour_map_depth)) {
         rval = ENOTSUP;
         goto CLEANUP;
     }
@@ -72,9 +75,9 @@ pal_image_t *load_tga(const char *fn) {
     // seek past any additional id data that may be after the header
     fseek(fp, sizeof(tga_header_t) + tga.id_length, SEEK_SET);
 
-    // read in the palette
-    int pal_entry_size = sizeof(tga_rgb_palette_entry_t);
-    if(NULL == (pal = calloc(pal_entry_size, tga.cmap.colour_map_length))) {
+    // allocate the palette buffer
+    int pal_entry_size = tga.cmap.colour_map_depth / 8;
+    if(NULL == (pal = calloc(tga.cmap.colour_map_length, pal_entry_size))) {
         rval = errno;
         goto CLEANUP;
     }
@@ -86,11 +89,30 @@ pal_image_t *load_tga(const char *fn) {
         goto CLEANUP;
     }
 
-    tga_rgb_palette_entry_t *ipal = &pal->rgb;
-    for(int i = 0; i < tga.cmap.colour_map_length; i++) {
-        img->pal[tga.cmap.colour_map_start + i].r = ipal[i].r;
-        img->pal[tga.cmap.colour_map_start + i].g = ipal[i].g;
-        img->pal[tga.cmap.colour_map_start + i].b = ipal[i].b;
+    if(3 == pal_entry_size) { // RGB data
+printf("RGB palette\n");
+        tga_rgb_palette_entry_t *ipal = &pal->rgb;
+        for(int i = 0; i < tga.cmap.colour_map_length; i++) {
+            img->pal[tga.cmap.colour_map_start + i].r = ipal[i].r;
+            img->pal[tga.cmap.colour_map_start + i].g = ipal[i].g;
+            img->pal[tga.cmap.colour_map_start + i].b = ipal[i].b;
+        }
+    } else { // ARGB data
+printf("ARGB palette\n");
+        tga_argb_palette_entry_t *ipal = &pal->argb;
+        int first_trans = tga.cmap.colour_map_length;
+        for(int i = 0; i < tga.cmap.colour_map_length; i++) {
+            img->pal[tga.cmap.colour_map_start + i].r = ipal[i].r;
+            img->pal[tga.cmap.colour_map_start + i].g = ipal[i].g;
+            img->pal[tga.cmap.colour_map_start + i].b = ipal[i].b;
+            if((0 == ipal[i].a) && (i < first_trans)) first_trans = i; // capture the first transparent value
+        }
+        if(first_trans == tga.cmap.colour_map_length) { // no fully transparent entry found
+            first_trans = -1;
+        } else { // we have an index
+            first_trans += tga.cmap.colour_map_start; // correct for the start offset
+        }
+        img->transparent = first_trans;
     }
 
     // read the image
