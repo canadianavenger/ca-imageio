@@ -41,6 +41,8 @@ if(PNG_FOUND)
     find_package(ZLIB REQUIRED)
     include_directories(${PNG_INCLUDE_DIRS})
     include_directories(${ZLIB_INCLUDE_DIRS})
+else()
+    message(WARNING "libpng not found, PNG support not enabled")
 endif()
 
 
