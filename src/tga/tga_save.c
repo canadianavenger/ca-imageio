@@ -79,7 +79,7 @@ int save_tga(const char *fn, pal_image_t *img) {
     }
 
     // write the image
-    nw = fwrite(img->data, img->width, img->height, fp);
+    nw = fwrite(img->pixels, img->width, img->height, fp);
     if(nw != img->height) {
         rval = errno;  // can't write file
         goto CLEANUP;

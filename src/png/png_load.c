@@ -78,7 +78,7 @@ pal_image_t *read_png(FILE *fp) {
     size_t width = png_get_image_width(png, info);
 
     // allocate an image buffer, assuming a full 256 colour palette
-    if(NULL == (img = image_alloc(width, height, 256))) {
+    if(NULL == (img = image_alloc(width, height, 256, 0))) {
         rval = errno;
         goto CLEANUP;
     }
@@ -119,7 +119,7 @@ pal_image_t *read_png(FILE *fp) {
 
     // point the row pointers to the line starts within the image buffer
     for(unsigned i = 0; i < height; i++) {
-        row_pointers[i] = (png_bytep)(img->data + (i * width * PNG_BPP));
+        row_pointers[i] = (png_bytep)(img->pixels + (i * width * PNG_BPP));
     }
 
     // read in the image data

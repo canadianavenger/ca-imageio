@@ -85,7 +85,7 @@ pal_image_t *load_bmp(const char *fn) {
     }
 
     // allocate image struct here
-    if(NULL == (img = image_alloc(bmp->bmi.image_width, bmp->bmi.image_height, (1 << bmp->bmi.bits_per_pixel)) )) {
+    if(NULL == (img = image_alloc(bmp->bmi.image_width, bmp->bmi.image_height, (1 << bmp->bmi.bits_per_pixel), 0) )) {
         rval = errno;
         goto bmp_cleanup;
     }
@@ -163,8 +163,8 @@ static int load_bmp4(pal_image_t *img, bmp_header_t *bmp, FILE *fp) {
     // now we need to read the image scanlines. 
     // start by pointing to start of last line of data
     size_t img_len = lw * lh;
-    uint8_t *px = &img->data[img_len - lw]; 
-    if(flip) px = img->data; // if flipped, start at beginning
+    uint8_t *px = &img->pixels[img_len - lw]; 
+    if(flip) px = img->pixels; // if flipped, start at beginning
     // loop through the lines
     for(int y = 0; y < lh; y++) {
         int nr = fread(buf, stride, 1, fp); // read a line
@@ -228,8 +228,8 @@ static int load_bmp8(pal_image_t *img, bmp_header_t *bmp, FILE *fp) {
     // now we need to read the image scanlines. 
     // start by pointing to start of last line of data
     size_t img_len = lw * lh;
-    uint8_t *px = &img->data[img_len - lw]; 
-    if(flip) px = img->data; // if flipped, start at beginning
+    uint8_t *px = &img->pixels[img_len - lw]; 
+    if(flip) px = img->pixels; // if flipped, start at beginning
     // loop through the lines
     for(int y = 0; y < lh; y++) {
         int nr = fread(buf, stride, 1, fp); // read a line

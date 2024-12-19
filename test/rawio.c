@@ -57,7 +57,7 @@ int save_raw(const char *fn, pal_image_t *img) {
     }
 
     // write the image
-    nw = fwrite(img->data, img->width, img->height, fp);
+    nw = fwrite(img->pixels, img->width, img->height, fp);
     if(nw != img->height) {
         rval = errno;  // can't write file
         goto CLEANUP;
@@ -111,7 +111,7 @@ pal_image_t *load_raw(const char *fn) {
         goto CLEANUP;
     }
 
-    if(NULL == (img = image_alloc(raw.width, raw.height, raw.colours))) {
+    if(NULL == (img = image_alloc(raw.width, raw.height, raw.colours, 0))) {
         rval = errno;
         goto CLEANUP;
     }
@@ -126,7 +126,7 @@ pal_image_t *load_raw(const char *fn) {
     }
 
     // read the image
-    nr = fread(img->data, img->width, img->height, fp);
+    nr = fread(img->pixels, img->width, img->height, fp);
     if(nr != img->height) {
         rval = errno;  // can't read file
         goto CLEANUP;

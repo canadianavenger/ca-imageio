@@ -118,7 +118,7 @@ static int save_bmp8(const char *fn, pal_image_t *img) {
     // which is from bottom to top. 
     // start by pointing to start of last line of data
     size_t img_len = img->width * img->height;
-    uint8_t *px = &img->data[img_len - img->width];
+    uint8_t *px = &img->pixels[img_len - img->width];
     // loop through the lines
     for(int y = 0; y < img->height; y++) {
         memset(buf, 0, stride); // zero out the line in the output buffer
@@ -228,7 +228,7 @@ static int save_bmp4(const char *fn, pal_image_t *img) {
     // the most significant nibble.
     // start by pointing to start of last line of data
     size_t img_len = img->width*img->height;
-    uint8_t *px = &img->data[img_len - img->width];
+    uint8_t *px = &img->pixels[img_len - img->width];
     // loop through the lines
     for(int y = 0; y < img->height; y++) {
         memset(buf, 0, stride); // zero out the line in the output buffer

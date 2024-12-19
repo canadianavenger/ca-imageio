@@ -67,7 +67,7 @@ pal_image_t *load_tga(const char *fn) {
         goto CLEANUP;
     }
 
-    if(NULL == (img = image_alloc(tga.image.width, tga.image.height, tga.cmap.colour_map_start + tga.cmap.colour_map_length))) {
+    if(NULL == (img = image_alloc(tga.image.width, tga.image.height, tga.cmap.colour_map_start + tga.cmap.colour_map_length, 0))) {
         rval = errno;
         goto CLEANUP;
     }
@@ -114,7 +114,7 @@ pal_image_t *load_tga(const char *fn) {
     }
 
     // read the image
-    nr = fread(img->data, img->width, img->height, fp);
+    nr = fread(img->pixels, img->width, img->height, fp);
     if(nr != img->height) {
         rval = errno;  // can't read file
         goto CLEANUP;

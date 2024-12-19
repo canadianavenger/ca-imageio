@@ -113,7 +113,7 @@ int write_png(FILE *fp, pal_image_t *img) {
     }
 
     for(unsigned i = 0; i < img->height; i++) {
-        row_pointers[i] = (png_bytep)(img->data + (i * img->width * PNG_BPP));
+        row_pointers[i] = (png_bytep)(img->pixels + (i * img->width * PNG_BPP));
     }
 
     png_write_image(png, row_pointers);
