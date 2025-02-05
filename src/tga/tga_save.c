@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <errno.h>
 
-/// @brief saves an image as a 4 bit or 8 bit Windows BMP image
+/// @brief saves an image as an 8 bit TGA image
 /// @param fn pointer to the name of the file to save the image as
 /// @param img pointer to the pal_image_t structure containing the image
 /// @return 0 on success otherwise an error value
