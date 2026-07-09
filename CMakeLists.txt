@@ -57,6 +57,11 @@ set (tga
     "src/tga/tga_save.c"
 )
 
+set (pcx
+    "src/pcx/pcx_load.c"
+    "src/pcx/pcx_save.c"
+)
+
 # only build the png sources, if lib_png is found.
 if(PNG_FOUND)
     set (png
@@ -74,6 +79,7 @@ set (sources
     ${bmp}
     ${tga}
     ${png}
+    ${pcx}
 )
 
 # generate the consolidated library
@@ -96,6 +102,8 @@ if(PROJECT_IS_TOP_LEVEL)
         raw2bmp
         tga2raw
         raw2tga
+        pcx2raw
+        raw2pcx
     )
 
     if(PNG_FOUND)
