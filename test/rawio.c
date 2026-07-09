@@ -17,9 +17,9 @@ typedef struct {
     uint8_t  data[];      // raw uncompressed palette data followed by image data
 } raw_image_file_t;
 
-/// @brief saves the image pointed to by src as a BMP
+/// @brief saves the image pointed to by src as a RAW
 /// @param fn name of the file to create and write to
-/// @param src pointer to a basic_image_t structure containing the image
+/// @param src pointer to a pal_image_t structure containing the image
 /// @return 0 on success, otherwise an error code
 int save_raw(const char *fn, pal_image_t *img) {
     int rval = EFAULT;
@@ -69,9 +69,9 @@ CLEANUP:
     return rval;
 }
 
-/// @brief loads the BMP image from a file
+/// @brief loads the RAW image from a file
 /// @param fn name of file to load
-/// @return  pointer to a basic_image_t structure containing the image, or null on error (errno is set)
+/// @return  pointer to a pal_image_t structure containing the image, or null on error (errno is set)
 pal_image_t *load_raw(const char *fn) {
     int rval = EFAULT;
     FILE *fp = NULL;

@@ -16,7 +16,7 @@
 /// @return 0 on success, otherwise an error code
 int save_png(const char *fn, pal_image_t *src);
 
-/// @brief loads the ONG image from a file
+/// @brief loads the PNG image from a file
 /// @param fn name of file to load
 /// @return  pointer to a basic_image_t structure containing the image, or null on error (errno is set)
 pal_image_t *load_png(const char *fn);
